@@ -24,7 +24,7 @@ use App\Http\Controllers\{
     SignatureController
 };
 
-// Page d’accueil redirige vers le tableau de bord
+// Page d’accueil redirige vers le tableau de bord avec la langue par défaut
 Route::get('/', function () {
     return redirect()->route('dashboard', ['locale' => config('app.locale')]);
 });
