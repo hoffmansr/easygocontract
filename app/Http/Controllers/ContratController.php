@@ -17,6 +17,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ContratWorkflowEtape;
+use Illuminate\Support\Facades\Log;
 
 use App\Mail\ContratEnApprobationMail;
 use App\Notifications\ContratEnApprobation;
@@ -576,10 +577,26 @@ public function approuver(Request $request, $id)
 
 
 
-public function show(Contrat $contrat)
-    {
-        return view('contrats.show', compact('contrat'));
-    }
+public function show($id)
+{
+    $contrat = Contrat::findOrFail($id);
 
+    // Marquer la notification comme lue si elle existe dans la requête
+ 
+
+if ($notificationId = request('notification_id')) {
+    $notification = auth()->user()->notifications()->where('id', $notificationId)->first();
+
+    if ($notification) {
+        $notification->markAsRead();
+        Log::info('Notification marquée comme lue : '.$notification->id);
+    } else {
+        Log::warning('Notification introuvable : '.$notificationId);
+    }
+}
+
+
+    return view('contrats.show', compact('contrat'));
+}
 
 }

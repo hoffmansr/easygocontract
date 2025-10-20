@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Contrat;
 
 use Illuminate\Http\Request;
 
@@ -26,13 +27,53 @@ class HomeController extends Controller
      */
     public function index()
         {
-            $user = Auth::user();
+           $user = Auth::user();
+            $societeId = $user->societe_id ?? null;
+            $query = Contrat::query();
+             // Filtrer par société si ce n'est pas un Super Admin
+        if (!$user->hasRole('Super Admin') && $societeId) {
+            $query->where('societe_id', $societeId);
+        }
+
+        // --- Statistiques dynamiques ---
+        $totalContrats = (clone $query)->count();
+        $contratsActifs = (clone $query)->where('statut', 'actif')->count();
+        $contratsPreparation = (clone $query)->where('statut', 'approbation')->count();
+        $contratsValides = (clone $query)->where('statut', 'approuvé')->count();
+
+        // Pour le graphique 1 (répartition des statuts)
+        $contratsParStatut = (clone $query)
+            ->selectRaw('statut, COUNT(*) as total')
+            ->groupBy('statut')
+            ->pluck('total', 'statut');
+
+        //  Pour le graphique 2 (contrats qui expirent bientôt)
+        $contratsEcheance = (clone $query)
+            ->whereNotNull('date_fin')
+            ->get()
+            ->groupBy(function ($contrat) {
+                if (now()->diffInDays($contrat->date_fin, false) < 0) {
+                    return 'Expiré';
+                } elseif (now()->diffInDays($contrat->date_fin) <= 30) {
+                    return 'Moins de 30 jours';
+                } else {
+                    return 'Plus de 30 jours';
+                }
+            })
+            ->map->count();
+                
             if ($user->hasRole('super_admin')) {
                 // Dashboard super admin
                 return view('dashboard.super_admin', compact('user'));
             }
             // Dashboard abonné
-            return view('abonne', compact('user'));
+            return view('abonne', compact('user',
+            'totalContrats',
+            'contratsActifs',
+            'contratsPreparation',
+            'contratsValides',
+            'contratsParStatut',
+            'contratsEcheance'));
     }
     
 }

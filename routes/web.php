@@ -24,7 +24,7 @@ use App\Http\Controllers\{
     SignatureController
 };
 
-// Page d’accueil redirige vers le tableau de bord
+// Page d’accueil redirige vers le tableau de bord avec la langue par défaut
 Route::get('/', function () {
     return redirect()->route('dashboard', ['locale' => config('app.locale')]);
 });
@@ -118,13 +118,15 @@ Route::group([
             ->name('modeles_contrats.clauses');
 
         // Workflows et etape
-        Route::resource('workflows', WorkflowController::class);
-        Route::resource('workflows.etapes', WorkflowEtapeController::class)->shallow();
-        Route::resource('workflows.etapes', WorkflowEtapeController::class)->except(['index']);;
-        Route::get('/workflows/{workflow}/etapes/ajax', [WorkflowEtapeController::class, 'getEtapes'])
+         Route::get('/workflows/{workflow}/etapes/ajax', [WorkflowEtapeController::class, 'getEtapes'])
             ->name('workflows.etapes.ajax');
+        Route::resource('workflows', WorkflowController::class);
+        // Route::resource('workflows.etapes', WorkflowEtapeController::class)->shallow();
+        Route::resource('workflows.etapes', WorkflowEtapeController::class)->except(['index']);;
+       
 
         // Contrats
+        
         Route::get('contrats/approbation', [ContratController::class, 'approbationList'])->name('contrats.approbation');
         Route::get('/contrats/{contrat}/voir', [ContratController::class, 'voir'])->name('contrats.voir');
         Route::post('contrats/{contrat}/approuver', [ContratController::class, 'approuver'])->name('contrats.approuver');
