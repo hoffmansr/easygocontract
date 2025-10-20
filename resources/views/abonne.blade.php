@@ -13,8 +13,8 @@
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">total de contrats</p>
                     <h5 class="font-weight-bolder mb-0">
-                      $53,000
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
+                     {{ $totalContrats }}
+                      <span class="text-success text-sm font-weight-bolder"></span>
                     </h5>
                   </div>
                 </div>
@@ -35,8 +35,8 @@
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Contrats actifs</p>
                     <h5 class="font-weight-bolder mb-0">
-                      2,300
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      {{ $contratsActifs }}
+                      <span class="text-success text-sm font-weight-bolder"></span>
                     </h5>
                   </div>
                 </div>
@@ -57,8 +57,8 @@
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Contrats en préparation</p>
                     <h5 class="font-weight-bolder mb-0">
-                      +3,462
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                      {{ $contratsPreparation }}
+                      <span class="text-danger text-sm font-weight-bolder"></span>
                     </h5>
                   </div>
                 </div>
@@ -79,8 +79,8 @@
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">contrats validés</p>
                     <h5 class="font-weight-bolder mb-0">
-                      $103,430
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
+                       {{ $contratsValides }}
+                      <span class="text-success text-sm font-weight-bolder"></span>
                     </h5>
                   </div>
                 </div>
@@ -377,91 +377,79 @@
 @push('custom-scripts')
 <!-- Diagramme 1 -->
     <script>
-        const ctx = document.getElementById('satisfactionChart').getContext('2d');
+const ctx = document.getElementById('satisfactionChart').getContext('2d');
 
-        new Chart(ctx, {
-          type: 'pie',
-          data: {
-            labels: ['Signé', 'Ebouche', 'Actif', 'Approuvé', 'Revisé' , 'En approbation'], // catégories
-            datasets: [{
-              data: [32.5, 2.9, 21.5, 14.1,4,6], // valeurs %
-              backgroundColor: [
-                '#4facfe', 
-                '#6fbaff',  
-                '#8ed1ff', 
-                '#add8ff',  
-                '#cae7ff', 
-                '#e6f4ff'  
-              ],
-              borderColor: '#fff',
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  usePointStyle: true,
-                  font: { size: 9.5 }
-                }
-              },
-              tooltip: {
-                callbacks: {
-                  label: function(context) {
-                    return context.label + ': ' + context.raw + '%';
-                  }
-                }
-              }
-            }
-          }
-        });
-</script>
-
-<!-- Diagramme 2 -->
-<script>
-  const ctx2 = document.getElementById('contractsDoughnut').getContext('2d');
-
-  new Chart(ctx2, {
-    type: 'doughnut',
-    data: {
-      labels: ['Signé', 'Ébauche', 'Actif', 'Approuvé', 'Révisé', 'En approbation'],
-      datasets: [{
-        data: [32.5, 2.9, 21.5, 14.1, 4, 6],
-        backgroundColor: [
-            '#4facfe', 
-            '#6fbaff',  
-            '#8ed1ff', 
-            '#add8ff',  
-            '#cae7ff', 
-            '#e6f4ff'  
-        ],
-        borderColor: '#fff',
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '65%', // profondeur de l’anneau
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            font: { size: 9.5 }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return context.label + ': ' + context.raw + '%';
-            }
+new Chart(ctx, {
+  type: 'pie',
+  data: {
+    labels: @json($contratsParStatut->keys()),
+    datasets: [{
+      data: @json($contratsParStatut->values()),
+      backgroundColor: [
+        '#4facfe', '#6fbaff', '#8ed1ff', '#add8ff', '#cae7ff', '#e6f4ff'
+      ],
+      borderColor: '#fff',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          font: { size: 10 }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.label + ': ' + context.raw;
           }
         }
       }
     }
-  });
+  }
+});
+</script>
+
+<!-- Diagramme 2 -->
+<script>
+const ctx2 = document.getElementById('contractsDoughnut').getContext('2d');
+
+new Chart(ctx2, {
+  type: 'doughnut',
+  data: {
+    labels: @json($contratsEcheance->keys()),
+    datasets: [{
+      data: @json($contratsEcheance->values()),
+      backgroundColor: ['#8ed1ff', '#f8c0aaff', '#4facfe'],
+      borderColor: '#fff',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '65%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          font: { size: 10 }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.label + ': ' + context.raw;
+          }
+        }
+      }
+    }
+  }
+});
 </script>
  @endpush
 

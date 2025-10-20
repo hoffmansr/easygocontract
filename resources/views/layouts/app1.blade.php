@@ -351,14 +351,14 @@ textarea.form-control {
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown">
                               🔔 Notifications
-                              @if($notifications->count() > 0)
-                                  <span class="badge bg-danger">{{ $notifications->count() }}</span>
+                              @if($unreadCount > 0)
+                                  <span class="badge bg-danger">{{ $unreadCount }}</span>
                               @endif
                           </a>
                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
                               @forelse($notifications as $notif)
                                   <li>
-                                      <a class="dropdown-item" href="{{ route('contrats.show', $notif->data['contrat_id']) }}">
+                                      <a class="dropdown-item{{ $notif->read_at ? '' : ' fw-bold' }}" href="{{ route('contrats.show', $notif->data['contrat_id']) }}">
                                           {{ $notif->data['message'] }}
                                           <br><small class="text-muted">{{ $notif->created_at->diffForHumans() }}</small>
                                       </a>

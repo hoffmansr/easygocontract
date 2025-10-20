@@ -501,11 +501,10 @@ document.getElementById('btnGenererContrat').addEventListener('click', function(
                     <table class="table table-bordered" id="workflowEtapesTable">
                         <thead style="background: linear-gradient(135deg, #4facfe08, #00f2fe08); color: #6fbaff;">
                             <tr>
-                                <th>#</th>
-                                <th>Titre étape</th>
-                                <th>Niveau</th>
-                                <th>Équipe</th>
-                                <th>Approbateur</th>
+                                <th class="text-center">Titre étape</th>
+                                <th class="text-center">Niveau</th>
+                                <th class="text-center">Équipe</th>
+                                <th class="text-center">Approbateur</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -614,11 +613,10 @@ document.getElementById('workflow_id').addEventListener('change', function() {
             data.forEach((etape, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${index + 1}</td>
-                        <td>${etape.libelle}</td>
-                        <td>${etape.niveau}</td>
-                        <td>${etape.user.user_type}</td>
-                        <td>${etape.user.name}</td>
+                        <td class="text-center">${etape.libelle}</td>
+                        <td class="text-center">${etape.niveau}</td>
+                        <td class="text-center">${etape.user.user_type}</td>
+                        <td class="text-center">${etape.user.name}</td>
                     </tr>
                 `;
             });

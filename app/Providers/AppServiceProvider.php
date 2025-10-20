@@ -23,24 +23,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
          require_once app_path('Helpers/ContractHelper.php');
-         View::composer('*', function ($view) {
+       View::composer('*', function ($view) {
         if (Auth::check()) {
+            // Récupérer les notifications non lues
             $user = Auth::user();
-            $societeId = $user->societe_id;
-
-            $notifications = $user->notifications()
-                ->whereJsonContains('data->societe_id', $societeId)
-                ->get();
-
-            $newNotifications = $user->unreadNotifications()
-                ->whereJsonContains('data->societe_id', $societeId)
-                ->get();
-
-            $view->with(compact('notifications', 'newNotifications'));
+            $notifications = $user->notifications()->latest()->take(10)->get();
+            $unreadCount = $user->unreadNotifications()->count();
         } else {
-            // Fournir des collections vides pour éviter les undefined
-            $view->with(['notifications' => collect(), 'newNotifications' => collect()]);
+            $notifications = collect();
+            $unreadCount = 0;
         }
+
+        $view->with([
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount,
+        ]);
     });
     }
 }

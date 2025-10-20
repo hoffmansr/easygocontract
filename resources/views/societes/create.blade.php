@@ -11,6 +11,16 @@
                         <div class="card-body">
                             <form method="POST" action="{{ route('societes.store') }}" enctype="multipart/form-data">
                                 @csrf
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <strong>Oups !</strong> Des erreurs ont été détectées :
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
 
                                 {{-- PARTIE SOCIÉTÉ --}}
                                 <h5 class=" fw-bold mb-3">Informations sur la société</h5>
@@ -46,8 +56,8 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Statut</label>
                                         <select name="statut" class="form-select" required>
-                                            <option value="active" {{ old('statut') == 'active' ? 'selected' : '' }}>Active</option>
-                                            <option value="suspendue" {{ old('statut') == 'suspendue' ? 'selected' : '' }}>Suspendue</option>
+                                            <option value="actif" {{ old('statut') == 'actif' ? 'selected' : '' }}>Actif</option>
+                                            <option value="suspendu" {{ old('statut') == 'suspendu' ? 'selected' : '' }}>Suspendu</option>
                                         </select>
                                     </div>
                                 </div>

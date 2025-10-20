@@ -32,7 +32,7 @@ class SocieteController extends Controller
             'raison_sociale' => 'required',
             'ice' => 'required|unique:societes,ice',
             'logo' => 'nullable|image',
-            'statut' => 'required|in:active,suspendue',
+            'statut' => 'required|in:actif,suspendu',
             // Utilisateur
             'user_name' => 'required',
             'user_email' => 'required|email|unique:users,email',
@@ -93,7 +93,7 @@ public function update(Request $request, $id)
         'raison_sociale' => 'required',
         'ice' => 'required|unique:societes,ice,' . $societe->id,
         'logo' => 'nullable|image',
-        'statut' => 'required|in:active,suspendue',
+        'statut' => 'required|in:actif,suspendu',
     ]);
 
     $societe->update([
