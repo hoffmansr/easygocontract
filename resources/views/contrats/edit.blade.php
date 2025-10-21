@@ -258,7 +258,7 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
                              <select name="annee_fiscale_id" id="annee_fiscale_id" class="form-control" required>
                                 <option value="">-- Choisir --</option>
                                 @foreach($anneesFiscales as $an)
-                                    <option value="{{ $type->id }}" {{ $contrat->annee_fiscale_id == $an->id ? 'selected' : '' }}>
+                                    <option value="{{ $an->id }}" {{ $contrat->annee_fiscale_id == $an->id ? 'selected' : '' }}>
                                         {{ $an->annee }}
                                     </option>
                                 @endforeach
