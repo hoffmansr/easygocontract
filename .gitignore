@@ -1,16 +1,38 @@
-# Environment variables
-.env
-
-# Composer dependencies
+# Laravel & PHP
 /vendor/
+.env
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
 
-# Node modules (if any)
-node_modules/
+# Laravel IDE Helper
+/_ide_helper.php
+/_ide_helper_models.php
 
-# Logs
-*.log
+# Laravel Mix / Node
+/node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
 
-# OS or editor files
+# Composer
+composer.lock
+
+# OS / Editor files
 .DS_Store
+Thumbs.db
 .idea/
 .vscode/
+*.swp
+*.sublime-project
+*.sublime-workspace
+
+# Logs & Cache
+/storage/*.key
+/storage/*.log
+/storage/debugbar/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/app/public/*
+/bootstrap/cache/*.php
