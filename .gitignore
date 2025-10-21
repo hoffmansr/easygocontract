@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Composer dependencies
+/vendor/
+
+# Node modules (if any)
+node_modules/
+
+# Logs
+*.log
+
+# OS or editor files
+.DS_Store
+.idea/
+.vscode/
