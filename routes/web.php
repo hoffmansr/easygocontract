@@ -21,7 +21,8 @@ use App\Http\Controllers\{
     WorkflowController,
     WorkflowEtapeController,
     ContratController,
-    SignatureController
+    SignatureController,
+    DocuSignController
 };
 
 // Page d’accueil redirige vers le tableau de bord avec la langue par défaut
@@ -144,3 +145,10 @@ Route::group([
         Route::patch('/contrats/{contrat}/ebauche', [ContratController::class, 'ebauche'])->name('contrats.ebauche');
     });
 });
+
+
+# Docusign endpoints
+Route::get('/docusign/connect', [DocuSignController::class, 'connect'])->name('docusign.connect');
+Route::get('/docusign/callback', [DocuSignController::class, 'callback'])->name('docusign.callback');
+Route::post('/docusign/send', [DocuSignController::class, 'sendDocument'])->name('docusign.send');
+Route::post('/docusign/all', [DocuSignController::class, 'sendToDocuSign'])->name('docusign.all');

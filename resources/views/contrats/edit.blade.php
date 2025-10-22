@@ -556,6 +556,13 @@ document.getElementById('btnGenererContrat').addEventListener('click', function(
                             </div>
                         </div>
                     </form>
+
+                    <form action="{{ route('docusign.all') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="signature_entity_id_hidden" id="signature_entity_id_hidden">
+                        <button type="submit"  class="btn bg-gradient-info position-absolute "  style="bottom: 0px; right: 15px; ">Envoyé Docusign</button>
+                    </form>
+
                 </fieldset>
         </div>
 
@@ -689,6 +696,20 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modèlesContrat').checked = false;
     }
 });
+</script>
+
+{{-- JS to sync select value to hidden input --}}
+<script>
+    const select = document.getElementById('signature_entity_id');
+    const hiddenInput = document.getElementById('signature_entity_id_hidden');
+
+    // Update hidden input when select changes
+    select.addEventListener('change', () => {
+        hiddenInput.value = select.value;
+    });
+
+    // Initialize hidden input with default value on page load
+    hiddenInput.value = select.value;
 </script>
 
 
