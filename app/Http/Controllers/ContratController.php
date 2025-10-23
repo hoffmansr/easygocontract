@@ -83,7 +83,7 @@ class ContratController extends Controller
         // 1 Créer le brouillon de contrat
         $contrat = Contrat::create([
             'societe_id' => $user->societe_id,
-            'statut' => 'ebauche',
+            'statut' => 'initie',
             'titre' => 'Nouveau contrat',
             'workflow_id' => null,
             'date_debut' => now(), 
@@ -93,6 +93,7 @@ class ContratController extends Controller
             'annee_fiscale_id' => null,
             'description' => '',
             'notes_generales' => null,
+            'model_contrat_id' => null,
             'type_renouvelement' => 'type',
             'duree_auto_renouvellement' => null,
 
@@ -459,6 +460,10 @@ class ContratController extends Controller
         // 4. Met à jour le workflow si sélectionné
         if ($request->has('workflow_id')) {
             $contrat->workflow_id = $request->workflow_id;
+        }
+
+        if ($request->has('modele_contrat_id')) {
+            $contrat->model_contrat_id = $request->modele_contrat_id;
         }
 
         // 5. Passe le statut à 'ebauche'

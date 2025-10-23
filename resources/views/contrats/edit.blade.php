@@ -46,6 +46,11 @@
         counter-reset: step;
     }
 
+    .select-error {
+        border: 1px solid #f00 !important; /* important pour override Bootstrap/Tailwind */
+        animation: shake 0.5s;
+    }
+
     .stepper li {
         flex: 1;
         text-align: center;
@@ -179,6 +184,7 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
     <form id="formContrat" action="{{ route('contrats.ebauche', $contrat->id) }}" method="POST">
         <input type="hidden" name="contenu_document" id="contenu_document">
         <input type="hidden" name="variables" id="hidden_variables">
+        <input type="hidden" name="modele_contrat_id" id="modele_contrat_id">
         @csrf
         @method('PATCH')
 
@@ -328,7 +334,7 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
                 <label class="form-check">
                     <input type="checkbox" id="modèlesContrat"
                            onchange="toggleModeleContrat()"
-                           {{ $contrat->modele_contrat_id ? 'checked' : '' }}>
+                           {{ $contrat->model_contrat_id ? 'checked' : '' }}>
                     Mes modèles de contrat
                 </label>
             </div>
@@ -344,12 +350,12 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
 
         {{-- Sélecteur de modèle --}}
         <select id="selectModeleContrat" class="form-control me-2"
-                style="{{ $contrat->modele_contrat_id ? '' : 'display:none;' }}"
+                style="{{ $contrat->model_contrat_id ? '' : 'display:none;' }}"
                 onchange="afficherContenuModele(this.value)">
             <option value="">Sélectionner un modèle</option>
             @foreach($modelesContrat as $modele)
                 <option value="{{ $modele->id }}"
-                        {{ $contrat->modele_contrat_id == $modele->id ? 'selected' : '' }}>
+                        {{ $contrat->model_contrat_id == $modele->id ? 'selected' : '' }}>
                     {{ $modele->titre }}
                 </option>
             @endforeach
@@ -448,6 +454,9 @@ document.getElementById('btnGenererContrat').addEventListener('click', function(
     // Remplir les champs cachés
     document.getElementById('contenu_document').value = html;
     document.getElementById('hidden_variables').value = JSON.stringify(getVariablesFromIframe());
+
+    const selectModelContrat = document.getElementById('selectModeleContrat');
+    document.getElementById('modele_contrat_id').value = selectModelContrat.value;
 
     document.getElementById('formContrat').submit();
 });
@@ -554,14 +563,20 @@ document.getElementById('btnGenererContrat').addEventListener('click', function(
                                     @endforeach
                                 </select>
                             </div>
+                            <div id="error-message" style="color: red; margin-top: 5px; height: 10px; display: none;"></div>
                         </div>
+
                     </form>
 
-                    <form action="{{ route('docusign.all') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="signature_entity_id_hidden" id="signature_entity_id_hidden">
-                        <button type="submit"  class="btn bg-gradient-info position-absolute "  style="bottom: 0px; right: 15px; ">Envoyé Docusign</button>
-                    </form>
+                        <form id="docusign-form" action="{{ route('docusign.send', ['id' => $contrat->id]) }}" method="post">
+                            @csrf
+                            <input type="hidden" name="signature_id" id="signature_entity_id_hidden">
+                            <button type="submit" class="btn bg-gradient-info position-absolute"
+                                    style="bottom: 0px; right: 15px;"
+                                    {{ !$contrat->model_contrat_id || $contrat->statut == 'initie' ? 'disabled' : '' }}>
+                                Envoyer à DocuSign
+                            </button>
+                        </form>
 
                 </fieldset>
         </div>
@@ -663,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const iframe = document.getElementById('modele-contrat-frame');
-    const modeleId = "{{ $contrat->modele_contrat_id ?? '' }}";
+    const modeleId = "{{ $contrat->model_contrat_id ?? '' }}";
     const clausesCount = "{{ optional($contrat->clauses)->count() ?? 0 }}";
     const contenu = `{!! addslashes($contrat->contenu_document ?? '') !!}`;
 
@@ -701,15 +716,30 @@ document.addEventListener('DOMContentLoaded', function () {
 {{-- JS to sync select value to hidden input --}}
 <script>
     const select = document.getElementById('signature_entity_id');
+    const errorMessage = document.getElementById('error-message');
     const hiddenInput = document.getElementById('signature_entity_id_hidden');
 
     // Update hidden input when select changes
     select.addEventListener('change', () => {
         hiddenInput.value = select.value;
+        errorMessage.textContent = "";
+        select.classList.remove('select-error');
     });
 
     // Initialize hidden input with default value on page load
     hiddenInput.value = select.value;
+
+    document.getElementById('docusign-form').addEventListener('submit', (e) => {
+        if (!select.value) {
+            e.preventDefault();
+
+            errorMessage.textContent = "Choisissez un signataire.";
+            errorMessage.style.display = 'block';
+            errorMessage.style.fontSize = '12px';
+
+            select.classList.add('select-error');
+        }
+    });
 </script>
 
 

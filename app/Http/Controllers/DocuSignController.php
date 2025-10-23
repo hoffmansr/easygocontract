@@ -14,18 +14,26 @@ use Illuminate\Support\Facades\Http;
 use App\Services\DocusignService;
 use App\Models\Representants_legaux;
 use App\Models\User;
+use App\Models\Contrat;
+use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\IOFactory;
 
 
 class DocuSignController extends Controller
 {
-    public function connect(DocuSignService $docuSign)
+    public function connect(DocuSignService $docuSign, Request $request)
     {
-        return redirect($docuSign->getAuthUrl());
+        $contratId = $request->query('contrat_id');
+        $authUrl = $docuSign->getAuthUrl();
+
+        return redirect($authUrl . '&state=' . $contratId);
     }
+
 
     public function callback(Request $request)
     {
         $code = $request->query('code');
+        $contratId = $request->query('state'); // retrieve contract ID here
 
         $response = Http::asForm()->post('https://account-d.docusign.com/oauth/token', [
             'grant_type' => 'authorization_code',
@@ -37,136 +45,147 @@ class DocuSignController extends Controller
 
         session(['docusign_token' => $response['access_token']]);
 
-        return redirect('/dashboard')->with('success', 'Connected to DocuSign!');
-    }
+        // Continue pending action if exists
+        if (session()->has('pending_docusign_data') && $contratId) {
+            $data = session()->pull('pending_docusign_data');
+            $contrat = Contrat::findOrFail($contratId);
 
-    public function sendDocument(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'document' => 'required|mimes:pdf'
-        ]);
-
-        $token = session('docusign_token');
-        if (!$token) {
-            return redirect('/docusign/connect')->with('error', 'Please connect to DocuSign first.');
+            return $this->processSendToDocuSign($data, $contrat, $response['access_token']);
         }
 
-        $fileContent = base64_encode(file_get_contents($request->file('document')->getPathName()));
-
-        $config = new \DocuSign\eSign\Configuration();
-        $config->setHost(config('docusign.base_uri'));
-        $config->addDefaultHeader('Authorization', 'Bearer ' . $token);
-        $apiClient = new \DocuSign\eSign\Client\ApiClient($config);
-
-        $document = new Document([
-            'document_base64' => $fileContent,
-            'name' => 'Document to Sign',
-            'file_extension' => 'pdf',
-            'document_id' => '1'
-        ]);
-
-        $signer = new Signer([
-            'email' => $request->email,
-            'name' => $request->name,
-            'recipient_id' => '1',
-            'routing_order' => '1'
-        ]);
-
-        $signHere = new SignHere([
-            'anchor_string' => '/signature/',
-            'anchor_units' => 'pixels',
-            'anchor_y_offset' => '10',
-            'anchor_x_offset' => '20'
-        ]);
-
-        $tabs = new Tabs(['sign_here_tabs' => [$signHere]]);
-        $signer->setTabs($tabs);
-
-        $envelopeDefinition = new EnvelopeDefinition([
-            'email_subject' => 'Please sign this document',
-            'documents' => [$document],
-            'recipients' => new Recipients(['signers' => [$signer]]),
-            'status' => 'sent'
-        ]);
-
-        $envelopesApi = new EnvelopesApi($apiClient);
-        $result = $envelopesApi->createEnvelope(config('docusign.account_id'), $envelopeDefinition);
-
-        return back()->with('success', 'Document sent! Envelope ID: ' . $result->getEnvelopeId());
+        return redirect('/dashboard')->with('success', 'Connexion DocuSign réussie.');
     }
 
-    public function sendToDocuSign(Request $request)
+    public function sendToDocuSign(Request $request, $id)
     {
+        $contrat = Contrat::findOrFail($id);
+
+        // Validate input
         $data = $request->validate([
-            'signature_entity_id_hidden' => 'required',
+            'signature_id' => 'required',
         ]);
 
         $token = session('docusign_token');
+
+        // If no token, redirect to connect and save pending data
         if (!$token) {
-            return redirect('/docusign/connect')->with('error', 'Please connect to DocuSign first.');
+            session(['pending_docusign_data' => $data]);
+            return redirect('/docusign/connect?contrat_id=' . $contrat->id)
+                ->with('info', 'Connectez-vous à DocuSign pour envoyer le document.');
         }
-        
-        $representant = Representants_legaux::where('id', $data["signature_entity_id_hidden"]);
-        $societeId = $representant->value('societe_id');
-        
-        // Then get the emails of users with that societe_id
-        $representantEmail = User::where('societe_id', $societeId)->value('email');
-        
-        // Static PDF path (example: public folder)
-        $pdfPath = public_path('test.pdf');
-        
-        if (!file_exists($pdfPath)) {
-            return back()->with('error', 'Le fichier PDF est introuvable.');
-        }
-        //dd($representant);
 
-        $fileContent = base64_encode(file_get_contents($pdfPath));
-
-        // DocuSign API config
-        $config = new \DocuSign\eSign\Configuration();
-        $config->setHost(config('docusign.base_uri'));
-        $config->addDefaultHeader('Authorization', 'Bearer ' . $token);
-        $apiClient = new \DocuSign\eSign\Client\ApiClient($config);
-
-        // Prepare document
-        $document = new Document([
-            'document_base64' => $fileContent,
-            'name' => 'Contrat ' . $representantEmail,
-            'file_extension' => 'pdf',
-            'document_id' => '1'
-        ]);
-
-        // Signer setup
-        $signer = new Signer([
-            'email' => $representantEmail,
-            'name' => "akram",
-            'recipient_id' => '1',
-            'routing_order' => '1'
-        ]);
-
-        $signHere = new SignHere([
-            'anchor_string' => '/signature/',
-            'anchor_units' => 'pixels',
-            'anchor_y_offset' => '10',
-            'anchor_x_offset' => '20'
-        ]);
-
-        $tabs = new Tabs(['sign_here_tabs' => [$signHere]]);
-        $signer->setTabs($tabs);
-
-        // Envelope
-        $envelopeDefinition = new EnvelopeDefinition([
-            'email_subject' => 'Veuillez signer le contrat #' . $representantEmail,
-            'documents' => [$document],
-            'recipients' => new Recipients(['signers' => [$signer]]),
-            'status' => 'sent'
-        ]);
-
-        $envelopesApi = new EnvelopesApi($apiClient);
-        $result = $envelopesApi->createEnvelope(config('docusign.account_id'), $envelopeDefinition);
-
-        return back()->with('success', 'Document envoyé via DocuSign ! Envelope ID: ' . $result->getEnvelopeId());
+        // Proceed to send document
+        return $this->processSendToDocuSign($data, $contrat, $token);
     }
+
+    protected function processSendToDocuSign(array $data, Contrat $contrat, string $token)
+    {
+        try {
+            // Get representative and related email
+            $representant = Representants_legaux::findOrFail($data["signature_id"]);
+            $societeId = $representant->societe_id;
+            $representantEmail = User::where('societe_id', $societeId)->value('email');
+
+            $filePath = storage_path('app/public/' . ltrim($contrat->modele->fichier_modele, '/'));
+
+            if (!file_exists($filePath)) {
+                return back()->with('error', 'Le fichier du modèle de contrat est introuvable : ' . $filePath);
+            }
+
+            $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+            if ($extension === 'docx') {
+                try {
+                    $pdfPath = str_replace('.docx', '.pdf', $filePath);
+
+                    // ✅ Define DomPDF as the PDF renderer
+                    Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+                    Settings::setPdfRendererPath(base_path('vendor/dompdf/dompdf'));
+
+                    $phpWord = IOFactory::load($filePath);
+                    $phpWord->save($pdfPath, 'PDF');
+
+                    $filePath = $pdfPath; // use the new PDF
+                } catch (\Throwable $e) {
+                    return back()->with('error', 'Erreur lors de la conversion du fichier DOCX en PDF : ' . $e->getMessage());
+                }
+            }
+
+            $fileContent = base64_encode(file_get_contents($filePath));
+            if (!$fileContent) {
+                return back()->with('error', 'Impossible de lire le contenu du fichier.');
+            }
+
+            $config = new \DocuSign\eSign\Configuration();
+            $config->setHost(config('docusign.base_uri'));
+            $config->addDefaultHeader('Authorization', 'Bearer ' . $token);
+            $apiClient = new \DocuSign\eSign\Client\ApiClient($config);
+
+            // ✅ Prepare document (detect actual extension)
+            $document = new \DocuSign\eSign\Model\Document([
+                'document_base64' => $fileContent,
+                'name' => 'Contrat ' . $contrat->titre,
+                'file_extension' => pathinfo($filePath, PATHINFO_EXTENSION),
+                'document_id' => '1',
+            ]);
+
+            // ✅ Prepare signer
+            $signer = new \DocuSign\eSign\Model\Signer([
+                'email' => $representantEmail,
+                'name' => $representant->nom ?? 'Signataire',
+                'recipient_id' => '1',
+                'routing_order' => '1',
+            ]);
+
+            // ✅ Define signature position (no anchor)
+            $signHere = new \DocuSign\eSign\Model\SignHere([
+                'x_position' => '200',
+                'y_position' => '600',
+                'document_id' => '1',
+                'page_number' => '1',
+            ]);
+
+            $tabs = new \DocuSign\eSign\Model\Tabs(['sign_here_tabs' => [$signHere]]);
+            $signer->setTabs($tabs);
+
+            // ✅ Envelope definition
+            $envelopeDefinition = new \DocuSign\eSign\Model\EnvelopeDefinition([
+                'email_subject' => 'Veuillez signer le contrat "' . $contrat->titre . '"',
+                'documents' => [$document],
+                'recipients' => new \DocuSign\eSign\Model\Recipients(['signers' => [$signer]]),
+                'status' => 'sent',
+            ]);
+
+            // ✅ Send
+            $envelopesApi = new \DocuSign\eSign\Api\EnvelopesApi($apiClient);
+            $result = $envelopesApi->createEnvelope(config('docusign.account_id'), $envelopeDefinition);
+
+            return back()->with('success', 'Document envoyé via DocuSign, verifiez votre email');
+        }
+
+        // 🔥 DocuSign errors
+        catch (\DocuSign\eSign\ApiException $e) {
+            $body = json_decode($e->getResponseBody(), true);
+            $message = $body['message'] ?? $e->getMessage();
+
+            if (strpos($e->getMessage(), '401') !== false) {
+                session()->forget('docusign_token');
+                session(['pending_docusign_data' => $data]);
+                return redirect('/docusign/connect')->with('error', 'Votre session DocuSign a expiré. Veuillez vous reconnecter.');
+            }
+
+            \Log::error('DocuSign API Error', [
+                'message' => $e->getMessage(),
+                'body' => $e->getResponseBody()
+            ]);
+
+            return back()->with('error', 'Erreur DocuSign : ' . $message);
+        }
+
+        // 🔥 Generic errors
+        catch (\Exception $e) {
+            \Log::error('Unexpected Error in DocuSign send', ['message' => $e->getMessage()]);
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
 }

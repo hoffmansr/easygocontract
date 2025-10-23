@@ -23,8 +23,7 @@
   <link rel="icon" type="image/png" href="{{url('assets/img/favicon.png')}}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
-  
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   <title>
     Material Dashboard 2 by Creative Tim
@@ -164,6 +163,36 @@ textarea.form-control {
 </head>
 
 <body class="g-sidenav-show @if(App::getlocale() == "ar") rtl @endif bg-gray-200">
+  {{-- Success message --}}
+  @if(session('success'))
+      <div class="alert alert-success position-fixed" style="z-index: 1000; top: 10px; right: 10px; bac color: #155724;">
+          {{ session('success') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+  @endif
+
+  {{-- Error message --}}
+  @if(session('error'))
+      <div class="alert alert-danger position-fixed" style="z-index: 1000; top: 10px; right: 10px; color: #721c24;">
+          {{ session('error') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+  @endif
+
+  {{-- Info message --}}
+  @if(session('info'))
+      <div class="alert alert-info position-fixed" style="z-index: 1000; top: 10px; right: 10px; color: #0c5460;">
+          {{ session('info') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+  @endif
+
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0  @if(App::getlocale() == "ar") fixed-end me-3 rotate-caret @else fixed-start ms-3 @endif    bg-gradient-dark" id="sidenav-main" >
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute @if(App::getlocale() == "ar") start-0 @else end-0 @endif top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>

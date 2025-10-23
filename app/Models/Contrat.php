@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Modeles_contrat;
+
 class Contrat extends Model
 {
     use HasFactory;
@@ -56,6 +58,11 @@ public function signatures()
 {
     return $this->hasMany(Signature::class);
 }
+
+    public function modele()
+    {
+        return $this->belongsTo(Modeles_contrat::class, 'model_contrat_id');
+    }
 
 
    

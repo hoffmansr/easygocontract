@@ -150,5 +150,4 @@ Route::group([
 # Docusign endpoints
 Route::get('/docusign/connect', [DocuSignController::class, 'connect'])->name('docusign.connect');
 Route::get('/docusign/callback', [DocuSignController::class, 'callback'])->name('docusign.callback');
-Route::post('/docusign/send', [DocuSignController::class, 'sendDocument'])->name('docusign.send');
-Route::post('/docusign/all', [DocuSignController::class, 'sendToDocuSign'])->name('docusign.all');
+Route::post('/docusign/{id}', [DocuSignController::class, 'sendToDocuSign'])->name('docusign.send');
