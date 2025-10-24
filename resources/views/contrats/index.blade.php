@@ -79,10 +79,10 @@
                     <div class="card-body px-0 pb-2">
                         
                         <div class=" p-0">
-                            <table class="table align-items-center mb-0">
+                            <table class="table ">
                                 <thead  style="background: linear-gradient(135deg, #4facfe08, #00f2fe08); color: #6fbaff;">
                                        <tr>
-                                            <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titre de contrat</th>
+                                            <th scope="col">Titre de contrat</th>
                                             <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Type de contrat</th>
                                             <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Statut</th>
                                             <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Intervenants</th>
@@ -95,7 +95,7 @@
                                       @forelse($contrats as $contrat)
                                     <tr>
                                        
-                                        <td class="align-middle text-center" >{{ $contrat->titre }}</td>
+                                        <td scope="row" >{{ $contrat->titre }}</td>
                                         <td class="align-middle text-center" >{{ $contrat->typesContrat->libelle ?? '' }}</td>
                                        <td class="align-middle text-center text-sm">
                                             @switch($contrat->statut)
@@ -213,6 +213,7 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            
                         </div>
 
                         <div class="d-flex justify-content-end mt-3">

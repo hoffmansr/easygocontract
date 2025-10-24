@@ -229,6 +229,7 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
                                 <option value="automatique" {{ $contrat->type_renouvelement == 'automatique' ? 'selected' : '' }}>Automatique</option>
                                 <option value="unique" {{ $contrat->type_renouvelement == 'unique' ? 'selected' : '' }}>Contrat unique</option>
                                 <option value="indeterminee" {{ $contrat->type_renouvelement == 'indeterminee' ? 'selected' : '' }}>Durée indéterminée</option>
+                                <option value="afternotif" {{ $contrat->type_renouvelement == 'indeterminee' ? 'selected' : '' }}>Après Notification</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -238,12 +239,12 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="duree_auto">Durée auto-renouvellement (mois)</label>
-                            <input type="number" name="duree_auto" id="duree_auto" class="form-control"
+                            <input type="number" name="duree_auto_renouvellement" id="duree_auto" class="form-control"
                                    value="{{ old('duree_auto', $contrat->duree_auto_renouvellement) }}">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="jours_annulation">Jours d’avance pour annulation</label>
-                            <input type="number" name="jours_annulation" id="jours_annulation" class="form-control"
+                            <input type="number" name="jours_preavis_resiliation" id="jours_annulation" class="form-control"
                                    value="{{ old('jours_annulation', $contrat->jours_preavis_resiliation) }}">
                         </div>
                     </div>
@@ -253,7 +254,7 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
                 <fieldset class="border p-3 mb-3">
                     <legend class="w-auto"><h4>Informations générales</h4></legend>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="annee_fiscale_id">Année fiscale</label>
                              <select name="annee_fiscale_id" id="annee_fiscale_id" class="form-control" required>
                                 <option value="">-- Choisir --</option>
@@ -265,10 +266,15 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
                             </select>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="date_debut">Date début</label>
                             <input type="date" name="date_debut" id="date_debut" class="form-control"
                                     value="{{ old('date_debut', $contrat->date_debut ? \Carbon\Carbon::parse($contrat->date_debut)->format('Y-m-d') : '') }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="date_fin">Date Fin</label>
+                            <input type="date" name="date_fin" id="date_fin" class="form-control"
+                                    value="{{ old('date_fin', $contrat->date_fin ? \Carbon\Carbon::parse($contrat->date_fin)->format('Y-m-d') : '') }}">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="description">Description</label>
@@ -283,36 +289,48 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
 
                 {{-- Section Contractants --}}
                 <fieldset class="border p-3 mb-3">
-                    <legend class="w-auto"><h4>Parties contractantes</h4></legend>
-                    <div class="d-flex mb-3">
-                        <select id="selectContractant" class="form-control me-2">
-                            @foreach($contractants as $p)
-                                <option value="{{ $p->id }}">{{ $p->nom }}</option>
-                            @endforeach
-                        </select>
-                        <button type="button" class="btn btn-success" id="addContractant">+ Ajouter</button>
-                    </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contractantsTable">
-                            @foreach($contrat->contractants as $c)
+                                        <legend class="w-auto"><h4>Parties contractantes</h4></legend>
+                                        <div class="row mb-3">
+                            <div class="col-md-8 d-flex">
+                                <select id="select-contractant" class="form-select" style="height: 40px;">
+                                    <option value="">-- Sélectionner un contractant --</option>
+                                    @foreach($contractants as $c)
+                                        <option value="{{ $c->id }}"
+                                                data-nom="{{ $c->nom }}"
+                                                data-raison="{{ $c->raison_sociale }}"
+                                                data-telephone="{{ $c->telephone }}"
+                                                data-ice="{{ $c->ice }}">
+                                            {{ $c->nom ?? $c->raison_sociale }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <button type="button" id="btn-add-selected" class="btn btn-success ms-2">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddContractant">
+                                    <i class="bi bi-person-plus me-1"></i> Ajouter un contractant
+                                </button>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered " id="table-contractants">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <input type="hidden" name="contractants[]" value="{{ $c->id }}">
-                                        {{ $c->nom }}
-                                    </td>
-                                    <td><button type="button" class="btn btn-danger btn-sm removeRow">❌</button></td>
+                                    <th>Nom / Raison sociale</th>
+                                    <th>Contact principal</th>
+                                    <th>Téléphone</th>
+                                    <th>RC / CIN</th>
+                                    <th>Supprimer</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {{-- Lignes ajoutées dynamiquement --}}
+                            </tbody>
+                        </table>
+                    </div>
                 </fieldset>
-            </div>
             {{-- ONGLET CLAUSES --}}
 <div class="tab-pane fade" id="clauses">
     <fieldset class="border p-3 mb-3 position-relative">
@@ -326,7 +344,7 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
         <div class="row text-center mb-3 mt-6">
             <div class="col">
                 <label class="form-check">
-                    <input type="checkbox" id="modèlesContrat"
+                    <input class="form-check-input" type="checkbox" id="modèlesContrat"
                            onchange="toggleModeleContrat()"
                            {{ $contrat->modele_contrat_id ? 'checked' : '' }}>
                     Mes modèles de contrat
@@ -334,13 +352,14 @@ $statutActuel = array_search($statutNormalise, array_keys($etapes));
             </div>
             <div class="col">
                 <label>
-                    <input type="checkbox" id="bibliothèqueClauses"
+                    <input class="form-check-input" type="checkbox" id="bibliothèqueClauses"
                            onchange="toggleBibliothequeClause()"
                            {{ optional($contrat->clauses)->count() ? 'checked' : '' }}>
                     Bibliothèque des clauses
                 </label>
             </div>
         </div>
+        
 
         {{-- Sélecteur de modèle --}}
         <select id="selectModeleContrat" class="form-control me-2"
@@ -391,6 +410,7 @@ function toggleBibliothequeClause() {
 }
 function afficherContenuModele(id) {
     if (!id) return;
+    
     fetch("{{ url('contrats/modele-content') }}/" + id)
         .then(response => response.json())
         .then(data => {
@@ -400,8 +420,24 @@ function afficherContenuModele(id) {
                 doc.open();
                 doc.write(data.html);
                 doc.close();
-            } else {
-                document.getElementById('modele-contrat-frame').contentDocument.body.innerHTML = data.message || 'Erreur';
+                
+                // Ajuster les inputs
+                setTimeout(() => {
+                    doc.querySelectorAll('.variable-field').forEach(input => {
+                        // Largeur basée sur le placeholder
+                        const textWidth = (input.placeholder.length * 8) + 30;
+                        input.style.width = Math.max(200, textWidth) + 'px';
+                        
+                        // Ajuster en temps réel
+                        input.addEventListener('input', function() {
+                            const valueWidth = (this.value.length * 8) + 30;
+                            this.style.width = Math.max(200, valueWidth) + 'px';
+                        });
+                    });
+                    
+                    // Ajuster hauteur iframe
+                    iframe.style.height = (doc.body.scrollHeight + 50) + 'px';
+                }, 100);
             }
         });
 }
@@ -559,39 +595,100 @@ document.getElementById('btnGenererContrat').addEventListener('click', function(
                 </fieldset>
         </div>
 
+  </div>
+   <!-- Modal Ajout contractant -->
+<div class="modal fade" id="modalAddContractant" tabindex="-1" aria-labelledby="modalAddContractantLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <h5 class="modal-title" id="modalAddContractantLabel">Nouveau contractant</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+
+      <form action="{{ route('contractants.store') }}" method="POST">
+        @csrf
+        <div class="modal-body">
+          <div class="row">
+            <!-- Colonne 1 -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="categorie" class="form-label">Catégorie <span class="text-danger">*</span></label>
+                <select name="categorie" id="categorie" class="form-select" required>
+                  <option value="">-- Sélectionner --</option>
+                  <option value="personne physique">Personne physique</option>
+                  <option value="personne morale">Personne morale</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="nom" class="form-label">Nom</label>
+                <input type="text" name="nom" id="nom" class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="prenom" class="form-label">Prénom</label>
+                <input type="text" name="prenom" id="prenom" class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="raison_sociale" class="form-label">Raison sociale</label>
+                <input type="text" name="raison_sociale" id="raison_sociale" class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="ice" class="form-label">ICE</label>
+                <input type="text" name="ice" id="ice" class="form-control">
+              </div>
             </div>
-   
+
+            <!-- Colonne 2 -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="type_contractant" class="form-label">Type</label>
+                <select name="type_contractant" id="type_contractant" class="form-select">
+                  <option value="">-- Sélectionner --</option>
+                  @foreach($typesContrats as $type)
+                      <option value="{{ $type->id }}">{{ $type->libelle }}</option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" name="email" id="email" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="ville" class="form-label">Ville</label>
+                <input type="text" name="ville" id="ville" class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="adresse" class="form-label">Adresse</label>
+                <input type="text" name="adresse" id="adresse" class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="telephone" class="form-label">Téléphone</label>
+                <input type="text" name="telephone" id="telephone" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-1"></i> Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
+
 {{-- Script pour gérer ajout des contractants --}}
-<script>
-    document.querySelectorAll('.removeRow').forEach(btn => {
-        btn.addEventListener('click', function () {
-            this.closest('tr').remove();
-        });
-    });
-
-    document.getElementById('addContractant').addEventListener('click', function () {
-        let select = document.getElementById('selectContractant');
-        let id = select.value;
-        let text = select.options[select.selectedIndex].text;
-
-        let tbody = document.getElementById('contractantsTable');
-        let row = document.createElement('tr');
-        row.innerHTML = `
-            <td>
-                <input type="hidden" name="contractants[]" value="${id}">
-                ${text}
-            </td>
-            <td><button type="button" class="btn btn-danger btn-sm removeRow">❌</button></td>
-        `;
-        tbody.appendChild(row);
-
-        row.querySelector('.removeRow').addEventListener('click', function () {
-            row.remove();
-        });
-    });
-</script>
 
 <script>
 const routeEtapesTemplate = "{{ route('workflows.etapes.ajax', ':id') }}";
@@ -689,9 +786,95 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modèlesContrat').checked = false;
     }
 });
+
+</script>
+<style>
+    /* Style des champs désactivés */
+    .disabled-field {
+        background-color: #f1f1f1 !important;
+        color: #6c757d !important;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+</style>
+<!-- // Script pour gestion dynamique des champs de renouvellement    -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const typeRenouvellement = document.getElementById('type_renouvelement');
+    const dateNotification = document.getElementById('date_notification');
+    const dureeAuto = document.getElementById('duree_auto');
+    const joursAnnulation = document.getElementById('jours_annulation');
+    const dateFin = document.getElementById('date_fin');
+
+    const fields = [dateNotification, dureeAuto, joursAnnulation, dateFin];
+
+    function toggleFields() {
+        if (typeRenouvellement.value === 'indeterminee') {
+            fields.forEach(field => {
+                field.disabled = true;
+                field.classList.add('disabled-field');
+                field.value = '';
+            });
+        } else {
+            fields.forEach(field => {
+                field.disabled = false;
+                field.classList.remove('disabled-field');
+            });
+        }
+    }
+
+    // Vérifie à l’ouverture
+    toggleFields();
+
+    // Réagit au changement du select
+    typeRenouvellement.addEventListener('change', toggleFields);
+});
 </script>
 
+<script>
+$(document).ready(function(){
+    $('#btn-add-selected').click(function(){
+        let sel = $('#select-contractant').find(':selected');
+        let id = sel.val();
+        if(!id) {
+            alert('Veuillez sélectionner un contractant');
+            return;
+        }
 
+        // Vérifier si déjà ajouté
+        if($('#row-'+id).length) {
+            alert('Ce contractant est déjà dans la liste');
+            return;
+        }
+
+        // Récupération des infos
+        let nom = sel.data('nom') || '';
+        let raison = sel.data('raison') || '';
+        let tel = sel.data('telephone') || '';
+        let ice = sel.data('ice') || '';
+
+        // Créer la ligne
+        let row = `
+        <tr id="row-${id}">
+            <td>${raison ? raison : nom}</td>
+            <td>${nom}</td>
+            <td>${tel}</td>
+            <td>${ice}</td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm btn-remove">X</button>
+                <input type="hidden" name="contractants[]" value="${id}">
+            </td>
+        </tr>`;
+
+        $('#table-contractants tbody').append(row);
+    });
+
+    // Supprimer une ligne
+    $(document).on('click', '.btn-remove', function(){
+        $(this).closest('tr').remove();
+    });
+});
+</script>
 
 
 @endsection

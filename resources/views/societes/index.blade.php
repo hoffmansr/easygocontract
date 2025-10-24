@@ -50,10 +50,10 @@
                                                     {{ $societe->users->first()->email ?? '-' }}
                                                 </td>
                                                 <td class="text-center text-sm">
-                                                    @if($societe->statut === 'active')
-                                                        <span class="badge badge-sm bg-gradient-success">Active</span>
+                                                    @if($societe->statut === 'actif')
+                                                        <span class="badge badge-sm bg-gradient-success">Actif</span>
                                                     @else
-                                                        <span class="badge badge-sm bg-gradient-secondary">Suspendue</span>
+                                                        <span class="badge badge-sm bg-gradient-secondary">Suspendu</span>
                                                     @endif
                                                 </td>
                                                 <td class="align-middle text-center">

@@ -33,7 +33,7 @@
             <h6 class="text-uppercase text-muted">Informations du contrat</h6>
             <ul class="list-group mb-3">
                 <li class="list-group-item"><strong>ID :</strong> {{ $contrat->id }}</li>
-                <li class="list-group-item"><strong>Type :</strong> {{ $contrat->typesContrat->nom ?? 'N/A' }}</li>
+                <li class="list-group-item"><strong>Type :</strong> {{ $contrat->typesContrat->libelle?? 'N/A' }}</li>
                 <li class="list-group-item"><strong>Date de création :</strong> {{ $contrat->created_at->format('d/m/Y') }}</li>
                 <li class="list-group-item"><strong>Dernière mise à jour :</strong> {{ $contrat->updated_at->diffForHumans() }}</li>
             </ul>
@@ -42,8 +42,11 @@
         <div class="col-md-6">
             <h6 class="text-uppercase text-muted">Parties concernées</h6>
             <ul class="list-group mb-3">
-                <li class="list-group-item"><strong>Contractant :</strong> {{ $contrat->contractant ?? 'Non spécifié' }}</li>
-                <li class="list-group-item"><strong>Responsable :</strong> {{ $contrat->responsable ?? 'Non spécifié' }}</li>
+                @foreach ($contrat->contractants as $contractant)
+                    <li class="list-group-item"><strong>Contractant :</strong>{{ $contractant->nom }} {{ $contractant->prenom }} ({{ $contractant->email }})</li>
+                @endforeach
+                    <li class="list-group-item"><strong>Responsable :</strong> {{  $contrat->responsable->nom ?? 'Non spécifié' }}</li>
+                    
             </ul>
         </div>
     </div>
@@ -51,8 +54,8 @@
     {{-- Contenu du contrat --}}
     <div class="mt-4">
         <h6 class="text-uppercase text-muted">Contenu du contrat</h6>
-        <div class="border p-3 rounded" style="min-height: 250px; background-color: #f8f9fa;">
-            {!! $contrat->contenu !!}
+        <div class="border p-3 rounded" style="min-height: 250px; color: #000;">
+            {!! $contrat->contenu_document !!}
         </div>
     </div>
 
@@ -61,14 +64,10 @@
         <a href="{{ route('contrats.index') }}" class="btn btn-secondary">⬅️ Retour</a>
 
         <div>
-            @if($contrat->statut === 'ebauche')
-                <a href="{{ route('contrats.edit', $contrat->id) }}" class="btn btn-primary">✏️ Modifier</a>
-            @endif
-
-            {{-- Exemple d’action supplémentaire --}}
-            @if($contrat->statut === 'approuve')
-                <button class="btn btn-success">📄 Télécharger PDF</button>
-            @endif
+            <form action="{{ route('contrats.approuver', $contrat) }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit" class="btn bg-gradient-info ">Approuver</button>
+        </form>
         </div>
     </div>
 

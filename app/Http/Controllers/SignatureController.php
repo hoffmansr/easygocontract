@@ -26,6 +26,10 @@ class SignatureController extends Controller
 
     // On récupère la société du signataire
     $societe_id = $signataire->societe_id;
+   if (in_array($contrat->statut, ['signé', 'approuvé', 'actif','annulé','expiré','renouvelé'])) {
+                return back()->with('error', "Impossible d'approuver un contrat déjà {$contrat->statut}.");
+            }
+
 
     // Enregistrement ou mise à jour de la signature
     Signature::updateOrCreate(

@@ -12,6 +12,7 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+
 <!DOCTYPE html>
 <html lang="{{App::getlocale()}}" @if(App::getlocale() == "ar") dir="rtl" @endif>
 
@@ -20,6 +21,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{url('assets/img/apple-icon.png')}}">
   <link rel="icon" type="image/png" href="{{url('assets/img/favicon.png')}}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  
+
+
   <title>
     Material Dashboard 2 by Creative Tim
   </title>
@@ -35,129 +41,130 @@
   <!-- Font Awesome Icons -->
  {{--  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script> --}}
   <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Round" rel="stylesheet">
+
+  
   <!-- CSS Files -->
   <link id="pagestyle" href="{{url('assets/css/material-dashboard.css?v=3.0.0')}}" rel="stylesheet" />
 
   <style>
-       /* Couleur de fond personnalisée pour la sidebar */
-    #sidenav-main {
-      background: #e6f4ff !important;
-      background-image: none !important;
-    }
+    /* Couleur de fond personnalisée pour la sidebar */
+#sidenav-main {
+  background: #e6f4ff !important;
+  background-image: none !important;
+}
 
-    /* Adapter la couleur du texte et des icônes pour rester lisibles */
-    #sidenav-main .nav-link,
-    #sidenav-main .nav-item,
-    #sidenav-main .material-icons,
-    #sidenav-main .nav-link span {
-      color: #111827 !important; /* texte sombre sur fond clair */
-    }
+/* Adapter la couleur du texte et des icônes pour rester lisibles */
+#sidenav-main .nav-link,
+#sidenav-main .nav-item,
+#sidenav-main .material-icons,
+#sidenav-main .nav-link span {
+  color: #111827 !important; /* texte sombre sur fond clair */
+}
 
-    /* Lors du survol */
-    #sidenav-main .nav-link:hover {
-      background-color: #d0eaff !important;
-      color: #000 !important;
-    }
+/* Lors du survol */
+#sidenav-main .nav-link:hover {
+  background-color: #d0eaff !important;
+  color: #000 !important;
+}
 
-        /* Rétablir un contour visible sur les champs focus */
-    .form-control:focus, 
-    .form-select:focus {
-      border-color: #007bff !important;   /* contour bleu clair */
-      box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
-      outline: none !important;
-    }
+    /* Rétablir un contour visible sur les champs focus */
+.form-control:focus, 
+.form-select:focus {
+  border-color: #007bff !important;   /* contour bleu clair */
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
+  outline: none !important;
+}
 
-    /* Garder une bordure normale même sans focus */
-    .form-control, 
-    .form-select {
-      border: 1px solid #ced4da !important;
-      border-radius: 0.375rem;
-      background-color: #fff !important;
-      color: #333 !important;
-    }
+/* Garder une bordure normale même sans focus */
+.form-control, 
+.form-select {
+  border: 1px solid #ced4da !important;
+  border-radius: 0.375rem;
+  background-color: #fff !important;
+  color: #333 !important;
+}
 
-        
-        #sidenav-main {
-      display: flex;
-      flex-direction: column;
-      height: 100vh; /* toute la hauteur de la fenêtre */
-      
-      overflow: hidden; /* évite les débordements */
-    }
-
-    /* La partie scrollable du menu */
-    #sidenav-collapse-main {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 5rem; /* un petit espace en bas */
-    }
-
-    /* Le footer reste collé en bas */
-    .sidenav-footer {
-      position: relative; /* plus de position absolute */
     
-      padding: 2rem;
-      text-align: center;
-    }
+    #sidenav-main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* toute la hauteur de la fenêtre */
+  
+  overflow: hidden; /* évite les débordements */
+}
 
-    /* Optionnel : améliore le style du bouton */
-    .sidenav-footer .btn {
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-      color: white;
-      font-weight: 600;
-      border: none;
-    }
-    /* Header de la sidebar */
-    .sidenav-header {
+/* La partie scrollable du menu */
+#sidenav-collapse-main {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 5rem; /* un petit espace en bas */
+}
 
-      border-bottom: 1px solid #c8e1ff;
-      text-align: center;
-    }
+/* Le footer reste collé en bas */
+.sidenav-footer {
+  position: relative; /* plus de position absolute */
+ 
+  padding: 2rem;
+  text-align: center;
+}
 
-    /* Rendre le texte et les icônes visibles */
-    .sidenav-header .navbar-brand span,
-    .sidenav-header i {
-      color: #111827 !important;
-    }
+/* Optionnel : améliore le style du bouton */
+.sidenav-footer .btn {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  font-weight: 600;
+  border: none;
+}
+/* Header de la sidebar */
+.sidenav-header {
 
-    /* Logo bien centré et visible */
-    .sidenav-header .navbar-brand img {
-      height: 40px;
-    }
+  border-bottom: 1px solid #c8e1ff;
+  text-align: center;
+}
+
+/* Rendre le texte et les icônes visibles */
+.sidenav-header .navbar-brand span,
+.sidenav-header i {
+  color: #111827 !important;
+}
+
+/* Logo bien centré et visible */
+.sidenav-header .navbar-brand img {
+  height: 40px;
+}
 
 
-        .form-check-input {
-      appearance: auto !important;
-      -webkit-appearance: checkbox !important;
-      -moz-appearance: checkbox !important;
-      background: none !important;
-      background-image: none !important;
-      box-shadow: none !important;
-    }
+    .form-check-input {
+  appearance: auto !important;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
 
-    .form-check-input:checked {
-      background: none !important;
-      background-image: none !important;
-      border-color: #ccc !important;
-    }
-    input.form-control,
-    select.form-control,
-    textarea.form-control {
-        padding: 8px 12px; /* espace intérieur (haut-bas, gauche-droite) */
-        border-radius: 6px; /* coins légèrement arrondis */
-        box-sizing: border-box;
-    }
+.form-check-input:checked {
+  background: none !important;
+  background-image: none !important;
+  border-color: #ccc !important;
+}
+input.form-control,
+select.form-control,
+textarea.form-control {
+    padding: 8px 12px; /* espace intérieur (haut-bas, gauche-droite) */
+    border-radius: 6px; /* coins légèrement arrondis */
+    box-sizing: border-box;
+}
 
 
 
   </style>
-  
 
 </head>
 
 <body class="g-sidenav-show @if(App::getlocale() == "ar") rtl @endif bg-gray-200">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 @if(App::getlocale() == "ar") fixed-end me-3 rotate-caret @else fixed-start ms-3 @endif    bg-gradient-dark" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0  @if(App::getlocale() == "ar") fixed-end me-3 rotate-caret @else fixed-start ms-3 @endif    bg-gradient-dark" id="sidenav-main" >
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute @if(App::getlocale() == "ar") start-0 @else end-0 @endif top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="{{route('dashboard')}}" >
@@ -166,7 +173,7 @@
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
-    <div class="collapse navbar-collapse @if(App::getlocale() == "ar") px-0 @endif w-auto  max-height-vh-100" id="sidenav-collapse-main">
+  <div class="collapse navbar-collapse @if(App::getlocale() == "ar") px-0 @endif w-auto  max-height-vh-100" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link text-white " href="{{route('dashboard')}}">
@@ -176,8 +183,16 @@
             <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif ">Dashboard</span>
           </a>
         </li>
+         <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"  href="{{route('dashboard')}}">
+            <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">dashboard</i>
+            </div>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif ">Dashboard</span>
+          </a>
+        </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="{{route('societes.index')}}">
+          <a class="nav-link {{ request()->routeIs('societes.index') ? 'active' : '' }}" href="{{route('societes.index')}}">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
@@ -185,37 +200,27 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/billing.html">
+          <a class="nav-link {{ request()->routeIs('superadmin') ? 'active' : '' }}" href="../pages/billing.html">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
             <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Super Admin</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/virtual-reality.html">
-            <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">view_in_ar</i>
-            </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Virtual Reality</span>
-          </a>
-        </li>
 
       </ul>
-
-
-
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
       <div class="mx-3">
-        <a class="btn bg-gradient-primary mt-4 w-100" href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a>
+        <a class="btn bg-gradient-info me-1 mb-1 mt-4 w-100" href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a>
       </div>
     </div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg @if(App::getlocale() == "ar") overflow-x-hidden @endif">
+  <main class="main-content position-relative bg-white border-radius-lg @if(App::getlocale() == "ar") overflow-x-hidden @endif" ,style="min-height:100vh; overflow:auto;">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-xl px-0 mx-4  border-radius-xl" id="navbarBlur" navbar-scroll="true">
       <div class="container-fluid py-1 px-3">
+       
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group input-group-outline">
@@ -227,6 +232,28 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown">
+                              🔔 Notifications
+                              @if($unreadCount > 0)
+                                  <span class="badge bg-danger">{{ $unreadCount }}</span>
+                              @endif
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                              @forelse($notifications as $notif)
+                                  <li>
+                                      <a class="dropdown-item{{ $notif->read_at ? '' : ' fw-bold' }}" href="{{ route('contrats.show', $notif->data['contrat_id']) }}">
+                                          {{ $notif->data['message'] }}
+                                          <br><small class="text-muted">{{ $notif->created_at->diffForHumans() }}</small>
+                                      </a>
+                                  </li>
+                              @empty
+                                  <li class="dropdown-item text-muted">Aucune nouvelle notification</li>
+                              @endforelse
+                          </ul>
+                      </li>
+
+
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -291,8 +318,6 @@
   <script src="{{url('assets/js/core/bootstrap.min.js')}}"></script>
   <script src="{{url('assets/js/plugins/perfect-scrollbar.min.js')}}"></script>
   <script src="{{url('assets/js/plugins/smooth-scrollbar.min.js')}}"></script>
-  <script src="{{ url('assets/js/plugins/chartjs.min.js') }}"></script>
-
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -307,6 +332,8 @@
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="{{url('assets/js/material-dashboard.min.js?v=3.0.0')}}"></script>
   @stack('custom-scripts')
+  @stack('scripts')
+
 </body>
 
 </html>

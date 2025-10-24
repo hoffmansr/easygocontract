@@ -11,7 +11,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">total de contrats</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('dashboard.total_contracts') }}</p>
                     <h5 class="font-weight-bolder mb-0">
                      {{ $totalContrats }}
                       <span class="text-success text-sm font-weight-bolder"></span>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-info me-1 mb-1 shadow text-center border-radius-md">
-                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                   <i class="ni ni-single-copy-04 text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>
@@ -33,7 +33,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Contrats actifs</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('dashboard.contracts_active') }}</p>
                     <h5 class="font-weight-bolder mb-0">
                       {{ $contratsActifs }}
                       <span class="text-success text-sm font-weight-bolder"></span>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-info me-1 mb-1 shadow text-center border-radius-md">
-                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                   <i class="ni ni-settings text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>
@@ -55,7 +55,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Contrats en préparation</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('dashboard.contracts_in_preparation') }}</p>
                     <h5 class="font-weight-bolder mb-0">
                       {{ $contratsPreparation }}
                       <span class="text-danger text-sm font-weight-bolder"></span>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-info me-1 mb-1 shadow text-center border-radius-md">
-                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                  <i class="ni ni-single-copy-04 text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>
@@ -77,7 +77,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">contrats validés</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">{{ __('dashboard.contracts_validated') }}</p>
                     <h5 class="font-weight-bolder mb-0">
                        {{ $contratsValides }}
                       <span class="text-success text-sm font-weight-bolder"></span>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="col-4 text-end">
                   <div class="icon icon-shape bg-gradient-info me-1 mb-1 y shadow text-center border-radius-md">
-                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                    <i class="ni ni-check-bold text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>
@@ -146,7 +146,7 @@
                   <h6>Contrats recents</h6>
                   <p class="text-sm mb-0">
                     <i class="fa fa-check text-info" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">30 done</span> this month
+                    <span class="font-weight-bold ms-1">{{ $totalContratsMois }}</span> this month
                   </p>
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
@@ -168,131 +168,103 @@
                 <table class="table align-items-center mb-0">
                   <thead  style="background: linear-gradient(135deg, #4facfe08, #00f2fe08); color: #6fbaff;">
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titre de contrat</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type de contrat</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Statut</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigné à</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date début</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date fin</th>
+                      <th class=" text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titre de contrat</th>
+                      <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type de contrat</th>
+                      <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Statut</th>
+                      <th class="align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigné à</th>
+                      <th class="align-midd text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date début</th>
+                      <th class="align-midd text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date fin</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                          <h6 class="mb-0 text-sm">Material XD Version</h6>
-                      </td>
-                      <td>
-                        
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $14,000 </span>
-                      </td>
-                      <td class="align-middle">
-                       <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-1.jpg" alt="team1">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-2.jpg" alt="team2">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alexander Smith">
-                            <img src="../assets/img/team-3.jpg" alt="team3">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-4.jpg" alt="team4">
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                          <h6 class="mb-0 text-sm">Add Progress Track</h6>
-                      </td>
-                      <td>
-                       
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $3,000 </span>
-                      </td>
-                      <td class="align-middle">
-                         <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-2.jpg" alt="team5">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-4.jpg" alt="team6">
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
-                      </td>
-                      <td>
-                       
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> Not set </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-3.jpg" alt="team8">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-1.jpg" alt="team9">
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
-                      </td>
-                      <td>
-                        
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $20,500 </span>
-                      </td>
-                      <td class="align-middle">
-                      <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-4.jpg" alt="user1">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-3.jpg" alt="user2">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alexander Smith">
-                            <img src="../assets/img/team-4.jpg" alt="user3">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-1.jpg" alt="user4">
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
-                      </td>
-                      <td>
-                        
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $500 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-4.jpg" alt="user5">
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                    
-                  </tbody>
+                <tbody>
+                    @forelse ($recentContrats as $contrat)
+                        <tr>
+                            <td class="align-middle text-center text-sm">
+                                <h6 class="mb-0 text-sm">{{ $contrat->titre }}</h6>
+                            </td>
+                            <td>
+                                <h6 class="mb-0 text-sm">{{ $contrat->typesContrat->libelle ?? '—' }}</h6>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                @switch($contrat->statut)
+                                    @case('ebauche')
+                                        <span class="badge badge-sm bg-gradient-secondary">
+                                            <i class="bi bi-pencil-square me-1"></i>Ébauche
+                                        </span>
+                                    @break
+                                    @case('revise')
+                                        <span class="badge badge-sm bg-gradient-warning">
+                                            <i class="bi bi-search me-1"></i>Révisé
+                                        </span>
+                                    @break
+                                    @case('en_approbation')
+                                        <span class="badge badge-sm bg-gradient-info">
+                                            <i class="bi bi-people me-1"></i>En approbation
+                                        </span>
+                                    @break
+                                    @case('approuve')
+                                        <span class="badge badge-sm bg-gradient-primary">
+                                            <i class="bi bi-check-circle me-1"></i>Approuvé
+                                        </span>
+                                    @break
+                                    @case('signe')
+                                        <span class="badge badge-sm bg-gradient-dark">
+                                            <i class="bi bi-pencil me-1"></i>Signé
+                                        </span>
+                                    @break
+                                    @case('actif')
+                                        <span class="badge badge-sm bg-gradient-success">
+                                            <i class="bi bi-play-circle me-1"></i>Actif
+                                        </span>
+                                    @break
+                                    @case('annule')
+                                        <span class="badge badge-sm bg-gradient-danger">
+                                            <i class="bi bi-x-circle me-1"></i>Annulé
+                                        </span>
+                                    @break
+                                    @case('expire')
+                                        <span class="badge badge-sm bg-gradient-secondary">
+                                            <i class="bi bi-hourglass-split me-1"></i>Expiré
+                                        </span>
+                                    @break
+                                    @case('renouvele')
+                                        <span class="badge badge-sm bg-gradient-info">
+                                            <i class="bi bi-arrow-repeat me-1"></i>Renouvelé
+                                        </span>
+                                    @break
+                                    @default
+                                        <span class="badge badge-sm bg-gradient-secondary">Inconnu</span>
+                                @endswitch
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                <div class="avatar-group mt-2">
+                                    @if($contrat->workflow)
+                                        @foreach($contrat->workflow->etapes as $etape)
+                                            @php
+                                                $user = $etape->user;
+                                            @endphp
+                                            @if($user)
+                                                <a href="javascript:;" class="avatar avatar-xs rounded-circle border border-primary"
+                                                  data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                  title="{{ $user->name }}">
+                                                   <img src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('images/default-user.png') }}" alt="{{ $user->name }}">
+
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </td>
+                             <td class="align-middle text-center" ><h6 class="mb-0 text-sm">{{ $contrat->date_debut ? $contrat->date_debut->format('d/m/Y') : '' }}</h6></td>
+                              <td class="align-middle text-center"><h6 class="mb-0 text-sm">{{ $contrat->date_fin ? $contrat->date_fin->format('d/m/Y') : '' }}</h6></td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Aucun contrat récent</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+
                 </table>
               </div>
             </div>
@@ -372,7 +344,7 @@
     </div>
 
     <script src="{{url('assets/js/plugins/chartjs.min.js')}}"></script>
-
+@endsection
 
 @push('custom-scripts')
 <!-- Diagramme 1 -->
@@ -453,6 +425,3 @@ new Chart(ctx2, {
 </script>
  @endpush
 
-
-
-@endsection

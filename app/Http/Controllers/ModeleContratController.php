@@ -180,4 +180,5 @@ public function store(Request $request)
 
         return $variables;
     }
+    
 }

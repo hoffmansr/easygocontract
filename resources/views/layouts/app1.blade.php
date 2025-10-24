@@ -22,6 +22,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="{{url('assets/img/apple-icon.png')}}">
   <link rel="icon" type="image/png" href="{{url('assets/img/favicon.png')}}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   
   
 
@@ -34,7 +35,7 @@
   <!-- Nucleo Icons -->
   <link href="{{url('assets/css/nucleo-icons.css')}}" rel="stylesheet" />
   <link href="{{url('assets/css/nucleo-svg.css')}}" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
 
 
@@ -156,8 +157,16 @@ textarea.form-control {
     border-radius: 6px; /* coins légèrement arrondis */
     box-sizing: border-box;
 }
-
-
+/* // Tableau personnalisé */
+.table th, .table td {
+  vertical-align: top !important;
+  text-align: left !important;
+  padding: 8px 12px !important;
+}
+.table td, .table th {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
 
   </style>
 
@@ -178,25 +187,25 @@ textarea.form-control {
       <ul class="navbar-nav">
          <form action="{{ route('contrats.storeDraft') }}" method="POST" class="d-inline">
                   @csrf
-                  <button type="submit" class="btn bg-gradient-info me-1 mb-1 mt-4 w-100">Générer un contrat</button>
+                  <button type="submit" class="btn bg-gradient-info me-1 mb-1 mt-4 w-100">@lang('sidebar.generate_contract')</button>
               </form>
-      <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">ANALYTICS</li>
+      <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif"> @lang('sidebar.analytics')</li>
 
         <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"  href="{{route('dashboard')}}">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif ">Dashboard</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif "> @lang('sidebar.dashboard')</span>
           </a>
         </li>
-        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">CONFIGURATION</li>
+        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif"> @lang('sidebar.configuration')</li>
         <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('parametrage') ? 'active' : '' }}" href="{{route('parametrage')}}">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
              <i class="material-icons opacity-10">settings</i>
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Parametrage</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif"> @lang('sidebar.settings')</span>
           </a>
         </li>
         <li class="nav-item">
@@ -205,7 +214,7 @@ textarea.form-control {
              <i class="material-icons opacity-10">group</i>
 
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Utilisateurs</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">@lang('sidebar.users')</span>
           </a>
         </li>
          <li class="nav-item">
@@ -214,10 +223,10 @@ textarea.form-control {
              <i class="material-icons opacity-10">group</i>
 
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Roles</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">@lang('sidebar.roles')</span>
           </a>
         </li>
-        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">Contractants</li>
+        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">@lang('sidebar.contractants')</li>
         <li class="nav-item">
         <a class="nav-link text-white d-flex align-items-center" 
           data-bs-toggle="collapse" 
@@ -227,7 +236,7 @@ textarea.form-control {
           aria-controls="submenuGestion">
 
           <i class="material-icons opacity-10 @if(App::getLocale() == 'ar') ms-2 @else me-2 @endif">folder</i>
-          <span class="flex-grow-1">@lang('Gestion')</span>
+          <span class="flex-grow-1">@lang('sidebar.gestion')</span>
           <i class="material-icons opacity-10 expand-icon">expand_more</i>
 
          
@@ -235,14 +244,14 @@ textarea.form-control {
 
         <div class="collapse @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif" id="submenuGestion">
           <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link text-white" href="{{route('contractants.index')}}">Liste des contractants</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="{{ route('contractants.create') }}">Ajouter un contractant</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{route('contractants.index')}}">@lang('sidebar.list_contractants')</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ route('contractants.create') }}">@lang('sidebar.add_contractant')</a></li>
           </ul>
         </div>
       </li>
 
 
-        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">CONTRATS</li>
+        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">@lang('sidebar.settings')</li>
         <li class="nav-item">
             <a class="nav-link text-white d-flex align-items-center" 
               data-bs-toggle="collapse" 
@@ -253,17 +262,17 @@ textarea.form-control {
 
               <i class="material-icons opacity-10 @if(App::getLocale() == 'ar') ms-2 @else me-2 @endif">description</i>
 
-              <span class="flex-grow-1">Paramétrage</span>
+              <span class="flex-grow-1">@lang('sidebar.settings')</span>
 
               <i class="material-icons opacity-10 expand-icon">expand_more</i>
             </a>
 
             <div class="collapse @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif" id="submenuParam">
               <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link text-white" href="{{route('types_contrats.index')}}">Types des contrats</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{route('clausiers.index')}}">Clausiers</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{route('modeles_contrats.index')}}">Modèles de contrats</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{route('workflows.index')}}">Workflow d’approbation</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{{route('types_contrats.index')}}">@lang('sidebar.types_contrats')</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{{route('clausiers.index')}}">@lang('sidebar.clausiers')</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{{route('modeles_contrats.index')}}">@lang('sidebar.modeles')</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{{route('workflows.index')}}">@lang('sidebar.workflow')</a></li>
               </ul>
             </div>
         </li>
@@ -278,46 +287,46 @@ textarea.form-control {
 
             <i class="material-icons opacity-10 @if(App::getLocale() == 'ar') ms-2 @else me-2 @endif">edit_note</i>
 
-            <span class="flex-grow-1">Production</span>
+            <span class="flex-grow-1">@lang('sidebar.production')</span>
 
             <i class="material-icons opacity-10 expand-icon">expand_more</i>
           </a>
 
           <div class="collapse @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif" id="submenuProduction">
             <ul class="nav flex-column">
-              <li class="nav-item"><a class="nav-link text-white" href="{{route('contrats.index')}}">Liste des contrats</a></li>
-              <li class="nav-item"><a class="nav-link text-white" href="{{ LaravelLocalization::localizeURL(route('contrats.approbation')) }}">Approuver un contrat</a></li>
+              <li class="nav-item"><a class="nav-link text-white" href="{{route('contrats.index')}}">@lang('sidebar.list_contrats')</a></li>
+              <li class="nav-item"><a class="nav-link text-white" href="{{ LaravelLocalization::localizeURL(route('contrats.approbation')) }}">@lang('sidebar.approve_contrat')</a></li>
             </ul>
           </div>
         </li>
 
         
-        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">RECHERCHE</li>
+        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">@lang('sidebar.search')</li>
          <li class="nav-item">
           <a class="nav-link text-white " href="../pages/virtual-reality.html">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">search</i>
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Recherche et OCR</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">@lang('sidebar.search_ocr')</span>
           </a>
         </li>
-        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">RAPPORT</li>
+        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">@lang('sidebar.report')</li>
          <li class="nav-item">
           <a class="nav-link text-white " href="../pages/virtual-reality.html">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
              <i class="material-icons opacity-10">assessment</i>
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Rapport</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">@lang('sidebar.report')</span>
           </a>
         </li>
-        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">INTEGRATION</li>
+        <li class=" text-uppercase small mt-2 mb-1 @if(App::getLocale() == 'ar') pe-4 @else ps-4 @endif">@lang('sidebar.integration')</li>
          <li class="nav-item">
           <a class="nav-link text-white " href="../pages/virtual-reality.html">
             <div class="text-white text-center @if(App::getlocale() == "ar") ms-2 @else me-2 @endif d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">integration_instructions</i>
 
             </div>
-            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">Intégration API</span>
+            <span class="nav-link-text @if(App::getlocale() == "ar") me-1 @else ms-1 @endif">@lang('sidebar.api_integration')</span>
           </a>
         </li>
 
@@ -358,10 +367,12 @@ textarea.form-control {
                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
                               @forelse($notifications as $notif)
                                   <li>
-                                      <a class="dropdown-item{{ $notif->read_at ? '' : ' fw-bold' }}" href="{{ route('contrats.show', $notif->data['contrat_id']) }}">
+                                      <a class="dropdown-item{{ $notif->read_at ? '' : ' fw-bold' }}" 
+                                        href="{{ route('contrats.show', ['contrat' => $notif->data['contrat_id'], 'notification_id' => $notif->id]) }}">
                                           {{ $notif->data['message'] }}
                                           <br><small class="text-muted">{{ $notif->created_at->diffForHumans() }}</small>
                                       </a>
+
                                   </li>
                               @empty
                                   <li class="dropdown-item text-muted">Aucune nouvelle notification</li>
@@ -451,5 +462,4 @@ textarea.form-control {
   @stack('scripts')
 
 </body>
-
 </html>
