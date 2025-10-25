@@ -574,10 +574,44 @@ document.getElementById('btnGenererContrat').addEventListener('click', function(
                             <button type="submit" class="btn bg-gradient-info position-absolute"
                                     style="bottom: 0px; right: 15px;"
                                     {{ !$contrat->model_contrat_id || $contrat->statut == 'initie' ? 'disabled' : '' }}>
-                                Envoyer à DocuSign
+                                Signature Digitale
                             </button>
                         </form>
 
+                        <canvas id="signature-pad" width="400" style="border: 1px solid #000;" height="200"></canvas><br>
+                        <p>Position de la signature manuscrite:</p>
+
+                        <div style="max-width: 400px; margin-left: 20px;" class="mb-4 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <input type="radio" name="alignment" id="left" value="left" class="form-check-input me-2">
+                                <label class="mb-0" for="left">À gauche</label>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <input type="radio" name="alignment" id="center" value="center" class="form-check-input me-2">
+                                <label class="mb-0" for="center">Centre</label>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <input type="radio" name="alignment" id="right" value="right" class="form-check-input me-2">
+                                <label class="mb-0" for="right">À droite</label>
+                            </div>
+                        </div>
+
+
+                        <form id="signature-form" action="{{ route('signpad.store', ['id' => $contrat->id]) }}" method="POST">
+                            @csrf
+                            @if($contrat->model_contrat_id)
+                                <input type="hidden" name="modele" value={{ $contrat->model_contrat_id }} id="modele-id">
+                            @else
+                                <input type="hidden" name="modele" id="modele-id">
+                            @endif
+                            <input type="hidden" name="signature" id="signature-input">
+                            <input type="hidden" name="alignment_value" id="alignment-input">
+
+                            <button id="clear" class="btn btn-light">Effacer</button>
+                            <button {{ !$contrat->model_contrat_id ? 'disabled' : '' }} class="btn btn-info">Signer</button>
+                        </form>
                 </fieldset>
         </div>
 
@@ -739,6 +773,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
             select.classList.add('select-error');
         }
+    });
+</script>
+
+<!-- Signpad script -->
+<script>
+    const modeleID = document.getElementById('modele-id');
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+    const selectModel = document.getElementById('signature_entity_id');
+
+    document.getElementById('clear').addEventListener('click', (e) => {e.preventDefault(); signaturePad.clear()});
+
+    selectModel.addEventListener('change', () => {
+        modeleID.value = selectModel.value;
+    });
+
+    document.getElementById('signature-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (signaturePad.isEmpty()) {
+            alert('Please provide a signature first.');
+            return;
+        }
+
+        // Get alignment radio value
+        const alignment = document.querySelector('input[name="alignment"]:checked');
+        if (!alignment) {
+            alert('Veuillez choisir la position de la signature.');
+            return;
+        }
+
+        const dataUrl = signaturePad.toDataURL('image/png');
+        document.getElementById('alignment-input').value = alignment.value;
+        document.getElementById('signature-input').value = dataUrl;
+        document.getElementById('signature-form').submit();
     });
 </script>
 

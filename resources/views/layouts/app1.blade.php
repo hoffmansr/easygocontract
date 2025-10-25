@@ -42,6 +42,12 @@
   <!-- Material Icons -->
  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Round" rel="stylesheet">
 
+  <!-- Signature Pad -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+  <!-- pdf-lib for manipulating PDFs in the browser -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
   
   <!-- CSS Files -->
   <link id="pagestyle" href="{{url('assets/css/material-dashboard.css?v=3.0.0')}}" rel="stylesheet" />

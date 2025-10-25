@@ -22,7 +22,8 @@ use App\Http\Controllers\{
     WorkflowEtapeController,
     ContratController,
     SignatureController,
-    DocuSignController
+    DocuSignController,
+    SignaturePadController
 };
 
 // Page d’accueil redirige vers le tableau de bord avec la langue par défaut
@@ -151,3 +152,6 @@ Route::group([
 Route::get('/docusign/connect', [DocuSignController::class, 'connect'])->name('docusign.connect');
 Route::get('/docusign/callback', [DocuSignController::class, 'callback'])->name('docusign.callback');
 Route::post('/docusign/{id}', [DocuSignController::class, 'sendToDocuSign'])->name('docusign.send');
+
+# Signpad endpoints
+Route::post('/signpad/{id}', [SignaturePadController::class, 'store'])->name('signpad.store');
