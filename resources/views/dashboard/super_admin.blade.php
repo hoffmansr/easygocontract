@@ -1,7 +1,6 @@
 @extends('layouts.app2')
 
 @section('content')
-<div class="container-fluid py-4">
   <!-- 4 Cards -->
   <div class="row">
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -18,7 +17,7 @@
               </div>
             </div>
             <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+              <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md">
                 <i class="ni ni-building text-lg opacity-10"></i>
               </div>
             </div>
@@ -41,7 +40,7 @@
               </div>
             </div>
             <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+              <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md">
                 <i class="ni ni-check-bold text-lg opacity-10"></i>
               </div>
             </div>
@@ -63,7 +62,7 @@
               </div>
             </div>
             <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
+              <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md">
                 <i class="ni ni-fat-remove text-lg opacity-10"></i>
               </div>
             </div>
@@ -85,7 +84,7 @@
               </div>
             </div>
             <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md">
+              <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md">
                 <i class="ni ni-credit-card text-lg opacity-10"></i>
               </div>
             </div>
@@ -166,7 +165,6 @@
       </div>
     </div>
   </div>
-</div>
 
 <!-- Charts -->
 @push('scripts')

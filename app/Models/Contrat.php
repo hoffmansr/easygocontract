@@ -13,7 +13,8 @@ class Contrat extends Model
     protected $fillable = [
         'societe_id','type_contrat_id','titre','annee_fiscale_id','date_debut',
         'date_fin','type_renouvelement','description','notes_generales',
-        'workflow_id','notif_contractant','statut'
+        'workflow_id','notif_contractant','statut', 'date_notification',
+        'duree_auto_renouvellement','jours_preavis_resiliation','signature_entity_id'
     ];
     protected $casts = [
     'date_debut' => 'date',

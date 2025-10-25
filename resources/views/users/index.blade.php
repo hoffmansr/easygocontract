@@ -82,9 +82,10 @@
                                         <div class="d-flex px-2 py-1">
                                             <div>
                                                 @if($user->photo)
-                                                    <img src="{{ asset('storage/' . $user->photo) }}" 
-                                                         class="avatar avatar-sm me-3 border-radius-lg" 
-                                                         alt="{{ $user->name }}">
+                                                    <img src="{{ asset('storage/users/' . basename($user->photo)) }}" 
+     class="avatar avatar-sm me-3 border-radius-lg" 
+     alt="{{ $user->name }}">
+
                                                 @else
                                                     <div class="avatar avatar-sm me-3 border-radius-lg bg-gradient-secondary d-flex align-items-center justify-content-center">
                                                         <span class="text-white text-sm font-weight-bold">

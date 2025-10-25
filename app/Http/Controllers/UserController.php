@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-//     public function __construct()
-// {
-//     $this->middleware('permission:Créer des utilisateurs')->only(['create']);
-//     $this->middleware('permission:Modifier des utilisateurs')->only(['edit']);
-//     $this->middleware('permission:Supprimer des utilisateurs')->only(['destroy']);
+    public function __construct()
+{
+    $this->middleware('permission:Créer des utilisateurs')->only(['create']);
+    $this->middleware('permission:Modifier des utilisateurs')->only(['edit']);
+    $this->middleware('permission:Supprimer des utilisateurs')->only(['destroy']);
    
-// }
+}
 
     /**
      * Liste des utilisateurs
